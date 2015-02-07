@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Collections;
+//using System.Windows.Forms;
+using System.Data;
+
+/// <summary>
+/// Descripción breve de ConnectionClass
+/// </summary>
+public class ConnectionClass
+{
+    private static SqlConnection conn;
+    private static SqlCommand command;
+
+	static ConnectionClass()
+	{
+        string connectionString = ConfigurationManager.ConnectionStrings["ExamenConnectionString"].ToString();
+        conn = new SqlConnection(connectionString);
+        command = new SqlCommand("", conn);
+
+	}
+
+    public static void insertarDatos(string cedula, string nombre, string apellidos, string telefono, string email)
+    {
+        string query = "insertar";
+        
+        conn.Open();
+        command.CommandText = query;
+        command.CommandType = CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@cedula", cedula);
+        command.Parameters.AddWithValue("@nombre", nombre);
+        command.Parameters.AddWithValue("@apellidos", apellidos);
+        command.Parameters.AddWithValue("@telefono", telefono);
+        command.Parameters.AddWithValue("@email", email);
+        command.ExecuteNonQuery();
+        conn.Close();
+        command.Parameters.Clear();
+    }
+
+    public static void eliminarDatos(string cedula)
+    {
+        string query = "eliminar";
+        command.CommandText = query;
+        conn.Open();
+        
+        command.CommandType = CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@cedula", cedula);
+        
+        command.ExecuteNonQuery();
+        conn.Close();
+        command.Parameters.Clear();
+    }
+
+    public static void actualizarDatos(string cedula, string nombre, string apellidos, string telefono, string email)
+    {
+        string query = "actualizar";
+        command.CommandText = query;
+        conn.Open();
+        command.CommandType = CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@cedula", cedula);
+        command.Parameters.AddWithValue("@nombre", nombre);
+        command.Parameters.AddWithValue("@apellidos", apellidos);
+        command.Parameters.AddWithValue("@telefono", telefono);
+        command.Parameters.AddWithValue("@email", email);
+        command.ExecuteNonQuery();
+        conn.Close();
+        command.Parameters.Clear();
+    }
+
+    public static DataTable mostrarDatos(string celdula)
+    {
+        string query = "seleccionar";
+        DataTable tabla = new DataTable();
+        command.CommandText = query;
+        command.Parameters.AddWithValue("@cedula", celdula);
+        conn.Open();
+        command.CommandType = CommandType.StoredProcedure;
+        SqlDataReader dr = command.ExecuteReader();
+        
+        if (dr.HasRows)
+        {
+            tabla.Load(dr);
+        }
+        else
+        { 
+        
+        }
+
+        command.Parameters.Clear();
+        conn.Close();
+        return tabla;
+    
+    }
+
+    public static DataTable todosLosDatos()
+    {
+        string query = "seleccionarTodo";
+        DataTable tabla = new DataTable();
+        command.CommandText = query;
+        conn.Open();
+        command.CommandType = CommandType.StoredProcedure;
+
+        SqlDataReader dr = command.ExecuteReader();
+        if (dr.HasRows)
+        {
+            tabla.Load(dr);
+        }
+
+        command.Parameters.Clear();
+        conn.Close();
+        return tabla;
+    }
+
+    public static ArrayList arregloTabla()
+    {
+        string query = "seleccionarTodo";
+        ArrayList orderList = new ArrayList();
+        command.CommandText = query;
+        conn.Open();
+        command.CommandType = CommandType.StoredProcedure;
+        SqlDataReader dr = command.ExecuteReader();
+        while (dr.Read())
+        {
+            int ced = dr.GetInt32(0);
+            string nom = dr.GetString(1);
+            string ape = dr.GetString(2);
+            int tel = dr.GetInt32(3);
+            string ema = dr.GetString(4);
+
+            TablaDinamica tabla = new TablaDinamica(ced, nom,ape,tel,ema);
+            orderList.Add(tabla);
+        }
+        conn.Close();
+        command.Parameters.Clear();
+        return orderList;
+    }
+}
+
+

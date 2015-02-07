@@ -1,0 +1,90 @@
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Collections;
+//using System.Windows.Forms;
+using System.Data;
+
+public partial class Home : System.Web.UI.Page
+{
+    public ServiceReference1.ExamenSoapClient suma2 = new ServiceReference1.ExamenSoapClient();
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ArrayList mitabla = ConnectionClass.arregloTabla();
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append(@"<table border='1'><tr><td>Cedula</td><td>Nombre</td><td>Apellidos</td><td>Telefono</td><td>Email</td></tr>");
+        foreach (TablaDinamica tablaDinamica in mitabla)
+        {
+            sb.Append(string.Format(@"<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td><a href='no.html?{0}&{1}'>Editar</a></td></tr>", tablaDinamica.Cedula, tablaDinamica.Nombre, tablaDinamica.Apellidos, tablaDinamica.Telefono, tablaDinamica.Email));
+        }
+        sb.Append(@"</table>");
+        Label1.Text = sb.ToString();
+    }
+    protected void Insertar_Click(object sender, EventArgs e)
+    {
+        ConnectionClass.insertarDatos(tbCedula.Text, tbNombre.Text, tbApellidos.Text, tbTelefono.Text, tbEmail.Text);
+        Response.Redirect("Home.aspx");
+        limpiarCampos();
+    }
+    protected void Eliminar_Click(object sender, EventArgs e)
+    {
+        ConnectionClass.eliminarDatos(tbCedula.Text);
+        Response.Redirect("Home.aspx");
+        limpiarCampos();
+    }
+    protected void Actualizar_Click(object sender, EventArgs e)
+    {
+        ConnectionClass.actualizarDatos(tbCedula.Text, tbNombre.Text, tbApellidos.Text, tbTelefono.Text, tbEmail.Text);
+        Response.Redirect("Home.aspx");
+        limpiarCampos();
+    }
+    protected void Buscar_Click(object sender, EventArgs e)
+    {
+        DataTable tabla = new DataTable();
+        tabla = ConnectionClass.todosLosDatos();
+      
+        GridView1.DataSource = tabla;
+        GridView1.DataBind();
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        int n1 = Convert.ToInt32(TextBox1.Text);
+        int n2 = Convert.ToInt32(TextBox2.Text);
+        TextBox3.Text = Convert.ToString(suma2.suma(n1,n2));
+    }
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+
+    }
+    protected void Button3_Click(object sender, EventArgs e)
+    {
+        DataTable tabla = new DataTable();
+        tabla = ConnectionClass.mostrarDatos(tbCedula.Text);
+
+        tbCedula.Text = tabla.Rows[0]["cedula"].ToString();
+        tbNombre.Text = tabla.Rows[0]["nombre"].ToString();
+        tbApellidos.Text = tabla.Rows[0]["apellidos"].ToString();
+        tbTelefono.Text = tabla.Rows[0]["telefono"].ToString();
+        tbEmail.Text = tabla.Rows[0]["email"].ToString();
+    }
+
+    public void limpiarCampos()
+    { 
+         tbCedula.Text = "";
+         tbNombre.Text = "";
+         tbApellidos.Text ="";
+         tbTelefono.Text ="";
+         tbEmail.Text ="";
+    }
+}
+
+
+

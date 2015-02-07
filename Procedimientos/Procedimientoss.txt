@@ -1,0 +1,143 @@
+seleccionar
+
+USE [Examen]
+GO
+/****** Object:  StoredProcedure [dbo].[seleccionarTodo]    Script Date: 02/07/2015 09:24:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[seleccionarTodo]
+
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT * FROM Datos 
+END
+/////////////////////////////////////////////////
+
+
+seleccionar con parametro
+USE [Examen]
+GO
+/****** Object:  StoredProcedure [dbo].[seleccionar]    Script Date: 02/07/2015 09:24:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[seleccionar]
+@cedula int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	SELECT * FROM Datos WHERE cedula = @cedula
+END
+/////////////////////////////////////////////////
+
+
+actualizar
+USE [Examen]
+GO
+/****** Object:  StoredProcedure [dbo].[ActualizarProducto]    Script Date: 02/07/2015 10:06:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[ActualizarProducto]
+
+@id int=0,
+@cantidad int=0
+
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+    
+	UPDATE Producto SET Cantidad=@cantidad WHERE Id=@id
+END
+/////////////////////////////////////////////////
+
+
+
+Eliminar
+USE [Examen]
+GO
+/****** Object:  StoredProcedure [dbo].[eliminar]    Script Date: 02/07/2015 10:06:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[eliminar]
+@cedula int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DELETE FROM Datos WHERE cedula = @cedula
+END
+/////////////////////////////////////////////////
+
+
+
+Insertar
+
+USE [Examen]
+GO
+/****** Object:  StoredProcedure [dbo].[insertar]    Script Date: 02/07/2015 10:07:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[insertar]
+@cedula int = 0,
+@nombre varchar(50),
+@apellidos varchar(50),
+@telefono int = 0,
+@email varchar(50)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	INSERT INTO Datos (cedula,nombre, apellidos, telefono, email) VALUES (@cedula, @nombre, @apellidos, @telefono, @email) 
+END
+/////////////////////////////////////////////////////////////
